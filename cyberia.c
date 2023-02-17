@@ -6,9 +6,10 @@
 #define SCREEN_RANGE_MAP 30
 #define SCREEN_FACTOR_RENDER 15
 #define SCREEN_DIM_RENDER SCREEN_RANGE_MAP *SCREEN_FACTOR_RENDER
+
+#define MAX_TYPES 2
 #define MAX_BOTS 5
-#define MAX_TYPES 1
-#define TYPE_ELEMENT_MAX_CHAR 100
+#define MAX_BUILDINGS 7
 
 //------------------------------------------------------------------------------------
 // Structs
@@ -24,9 +25,10 @@ struct element
 };
 
 struct element bots[MAX_BOTS];
+struct element buildings[MAX_BUILDINGS];
 
-const char *types[MAX_TYPES] = {"bot"};
-int maxTypes[MAX_TYPES] = {MAX_BOTS};
+char *types[MAX_TYPES] = {"bot", "building"};
+int maxElements[MAX_TYPES] = {MAX_BOTS, MAX_BUILDINGS};
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -43,26 +45,39 @@ int main(void)
 
     for (int i = 0; i < MAX_TYPES; i++)
     {
-        for (int j = 0; j < maxTypes[i]; j++)
+        for (int j = 0; j < maxElements[i]; j++)
         {
+
             if (strcmp(types[i], "bot") == 0)
             {
                 bots[j].type = "bot";
+                bots[j].dim = 1;
                 bots[j].x = GetRandomValue(0, SCREEN_RANGE_MAP);
                 bots[j].y = GetRandomValue(0, SCREEN_RANGE_MAP);
-                bots[j].dim = 2;
                 bots[j].color = YELLOW;
+            }
+            if (strcmp(types[i], "building") == 0)
+            {
+                buildings[j].x = GetRandomValue(0, SCREEN_RANGE_MAP);
+                buildings[j].y = GetRandomValue(0, SCREEN_RANGE_MAP);
+                buildings[j].type = "building";
+                buildings[j].dim = 2;
+                buildings[j].color = BLACK;
             }
         }
     }
 
     for (int i = 0; i < MAX_TYPES; i++)
     {
-        for (int j = 0; j < maxTypes[i]; j++)
+        for (int j = 0; j < maxElements[i]; j++)
         {
-            if (strcmp(bots[j].type, "bot") == 0)
+            if (strcmp(types[i], "bot") == 0)
             {
                 printf("succes load -> %s %i \n", bots[j].type, j);
+            }
+            if (strcmp(types[i], "building") == 0)
+            {
+                printf("succes load -> %s %i \n", buildings[j].type, j);
             }
         }
     }
@@ -106,6 +121,16 @@ int main(void)
                 (bots[i].dim * SCREEN_FACTOR_RENDER),
                 (bots[i].dim * SCREEN_FACTOR_RENDER),
                 bots[i].color);
+        }
+
+        for (int i = 0; i < MAX_BUILDINGS; i++)
+        {
+            DrawRectangle(
+                (buildings[i].x * SCREEN_FACTOR_RENDER),
+                (buildings[i].y * SCREEN_FACTOR_RENDER),
+                (buildings[i].dim * SCREEN_FACTOR_RENDER),
+                (buildings[i].dim * SCREEN_FACTOR_RENDER),
+                buildings[i].color);
         }
 
         EndDrawing();
