@@ -94,19 +94,30 @@ int main(void)
         // Update
         //----------------------------------------------------------------------------------
 
-        for (int i = 0; i < MAX_BOTS; i++)
+        for (int i = 0; i < MAX_TYPES; i++)
         {
-            bots[i].x = bots[i].x + GetRandomValue(-2, 2);
-            bots[i].y = bots[i].y + GetRandomValue(-2, 2);
-            if (bots[i].x < 0)
-                bots[i].x = 0;
-            if (bots[i].y < 0)
-                bots[i].y = 0;
-            if (bots[i].x > SCREEN_RANGE_MAP)
-                bots[i].x = SCREEN_RANGE_MAP;
-            if (bots[i].y > SCREEN_RANGE_MAP)
-                bots[i].y = SCREEN_RANGE_MAP;
+            for (int j = 0; j < maxElements[i]; j++)
+            {
+
+                if (strcmp(types[i], "bot") == 0)
+                {
+                    bots[j].x = bots[j].x + GetRandomValue(-2, 2);
+                    bots[j].y = bots[j].y + GetRandomValue(-2, 2);
+                    if (bots[j].x < 0)
+                        bots[j].x = 0;
+                    if (bots[j].y < 0)
+                        bots[j].y = 0;
+                    if (bots[j].x > SCREEN_RANGE_MAP)
+                        bots[j].x = SCREEN_RANGE_MAP;
+                    if (bots[j].y > SCREEN_RANGE_MAP)
+                        bots[j].y = SCREEN_RANGE_MAP;
+                }
+                if (strcmp(types[i], "building") == 0)
+                {
+                }
+            }
         }
+
         //----------------------------------------------------------------------------------
 
         // Draw
@@ -115,24 +126,30 @@ int main(void)
 
         ClearBackground(GREEN);
 
-        for (int i = 0; i < MAX_BOTS; i++)
+        for (int i = 0; i < MAX_TYPES; i++)
         {
-            DrawRectangle(
-                (bots[i].x * SCREEN_FACTOR_RENDER),
-                (bots[i].y * SCREEN_FACTOR_RENDER),
-                (bots[i].dim * SCREEN_FACTOR_RENDER),
-                (bots[i].dim * SCREEN_FACTOR_RENDER),
-                bots[i].color);
-        }
+            for (int j = 0; j < maxElements[i]; j++)
+            {
 
-        for (int i = 0; i < MAX_BUILDINGS; i++)
-        {
-            DrawRectangle(
-                (buildings[i].x * SCREEN_FACTOR_RENDER),
-                (buildings[i].y * SCREEN_FACTOR_RENDER),
-                (buildings[i].dim * SCREEN_FACTOR_RENDER),
-                (buildings[i].dim * SCREEN_FACTOR_RENDER),
-                buildings[i].color);
+                if (strcmp(types[i], "bot") == 0)
+                {
+                    DrawRectangle(
+                        (bots[j].x * SCREEN_FACTOR_RENDER),
+                        (bots[j].y * SCREEN_FACTOR_RENDER),
+                        (bots[j].dim * SCREEN_FACTOR_RENDER),
+                        (bots[j].dim * SCREEN_FACTOR_RENDER),
+                        bots[j].color);
+                }
+                if (strcmp(types[i], "building") == 0)
+                {
+                    DrawRectangle(
+                        (buildings[j].x * SCREEN_FACTOR_RENDER),
+                        (buildings[j].y * SCREEN_FACTOR_RENDER),
+                        (buildings[j].dim * SCREEN_FACTOR_RENDER),
+                        (buildings[j].dim * SCREEN_FACTOR_RENDER),
+                        buildings[j].color);
+                }
+            }
         }
 
         EndDrawing();
