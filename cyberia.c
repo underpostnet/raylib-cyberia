@@ -29,7 +29,22 @@ struct element buildings[MAX_BUILDINGS];
 // Params
 //------------------------------------------------------------------------------------
 char *types[MAX_TYPES] = {"bot", "building"};
-int maxElements[MAX_TYPES] = {MAX_BOTS, MAX_BUILDINGS};
+int maxTypes[MAX_TYPES] = {MAX_BOTS, MAX_BUILDINGS};
+int dimTypes[MAX_TYPES] = {2, 4};
+//------------------------------------------------------------------------------------
+
+// Functions
+//------------------------------------------------------------------------------------
+
+int validatePosition(int dim, int pos)
+{
+    int maxPos = SCREEN_RANGE_MAP - dim;
+    if (pos < 0)
+        return 0;
+    if (pos > maxPos)
+        return maxPos;
+    return pos;
+}
 //------------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------------
@@ -46,23 +61,23 @@ int main(void)
 
     for (int i = 0; i < MAX_TYPES; i++)
     {
-        for (int j = 0; j < maxElements[i]; j++)
+        for (int j = 0; j < maxTypes[i]; j++)
         {
 
             if (strcmp(types[i], "bot") == 0)
             {
                 bots[j].type = "bot";
-                bots[j].dim = 1;
-                bots[j].x = GetRandomValue(0, SCREEN_RANGE_MAP);
-                bots[j].y = GetRandomValue(0, SCREEN_RANGE_MAP);
+                bots[j].dim = dimTypes[i];
+                bots[j].x = validatePosition(bots[j].dim, (GetRandomValue(0, SCREEN_RANGE_MAP)));
+                bots[j].y = validatePosition(bots[j].dim, (GetRandomValue(0, SCREEN_RANGE_MAP)));
                 bots[j].color = YELLOW;
             }
             if (strcmp(types[i], "building") == 0)
             {
-                buildings[j].x = GetRandomValue(0, SCREEN_RANGE_MAP);
-                buildings[j].y = GetRandomValue(0, SCREEN_RANGE_MAP);
                 buildings[j].type = "building";
-                buildings[j].dim = 2;
+                buildings[j].dim = dimTypes[i];
+                buildings[j].x = validatePosition(buildings[j].dim, (GetRandomValue(0, SCREEN_RANGE_MAP)));
+                buildings[j].y = validatePosition(buildings[j].dim, (GetRandomValue(0, SCREEN_RANGE_MAP)));
                 buildings[j].color = BLACK;
             }
         }
@@ -70,15 +85,15 @@ int main(void)
 
     for (int i = 0; i < MAX_TYPES; i++)
     {
-        for (int j = 0; j < maxElements[i]; j++)
+        for (int j = 0; j < maxTypes[i]; j++)
         {
             if (strcmp(types[i], "bot") == 0)
             {
-                printf("succes load -> %s %i \n", bots[j].type, j);
+                printf("success load -> %s %i \n", bots[j].type, j);
             }
             if (strcmp(types[i], "building") == 0)
             {
-                printf("succes load -> %s %i \n", buildings[j].type, j);
+                printf("success load -> %s %i \n", buildings[j].type, j);
             }
         }
     }
@@ -96,21 +111,13 @@ int main(void)
 
         for (int i = 0; i < MAX_TYPES; i++)
         {
-            for (int j = 0; j < maxElements[i]; j++)
+            for (int j = 0; j < maxTypes[i]; j++)
             {
 
                 if (strcmp(types[i], "bot") == 0)
                 {
-                    bots[j].x = bots[j].x + GetRandomValue(-2, 2);
-                    bots[j].y = bots[j].y + GetRandomValue(-2, 2);
-                    if (bots[j].x < 0)
-                        bots[j].x = 0;
-                    if (bots[j].y < 0)
-                        bots[j].y = 0;
-                    if (bots[j].x > SCREEN_RANGE_MAP)
-                        bots[j].x = SCREEN_RANGE_MAP;
-                    if (bots[j].y > SCREEN_RANGE_MAP)
-                        bots[j].y = SCREEN_RANGE_MAP;
+                    bots[j].x = validatePosition(bots[j].dim, (bots[j].x + GetRandomValue(-2, 2)));
+                    bots[j].y = validatePosition(bots[j].dim, (bots[j].y + GetRandomValue(-2, 2)));
                 }
                 if (strcmp(types[i], "building") == 0)
                 {
@@ -128,8 +135,17 @@ int main(void)
 
         for (int i = 0; i < MAX_TYPES; i++)
         {
-            for (int j = 0; j < maxElements[i]; j++)
+            for (int j = 0; j < maxTypes[i]; j++)
             {
+                if (strcmp(types[i], "building") == 0)
+                {
+                    DrawRectangle(
+                        (buildings[j].x * SCREEN_FACTOR_RENDER),
+                        (buildings[j].y * SCREEN_FACTOR_RENDER),
+                        (buildings[j].dim * SCREEN_FACTOR_RENDER),
+                        (buildings[j].dim * SCREEN_FACTOR_RENDER),
+                        buildings[j].color);
+                }
 
                 if (strcmp(types[i], "bot") == 0)
                 {
@@ -139,15 +155,6 @@ int main(void)
                         (bots[j].dim * SCREEN_FACTOR_RENDER),
                         (bots[j].dim * SCREEN_FACTOR_RENDER),
                         bots[j].color);
-                }
-                if (strcmp(types[i], "building") == 0)
-                {
-                    DrawRectangle(
-                        (buildings[j].x * SCREEN_FACTOR_RENDER),
-                        (buildings[j].y * SCREEN_FACTOR_RENDER),
-                        (buildings[j].dim * SCREEN_FACTOR_RENDER),
-                        (buildings[j].dim * SCREEN_FACTOR_RENDER),
-                        buildings[j].color);
                 }
             }
         }
