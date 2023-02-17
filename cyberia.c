@@ -13,11 +13,12 @@
 
 struct bot
 {
-    int y;
     int x;
+    int y;
     int dim;
     Color color;
 };
+struct bot bots[MAX_BOTS];
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -30,7 +31,6 @@ int main(void)
     // printf("%i \n", GetRandomValue(0, 10));
     //--------------------------------------------------------------------------------------
 
-    struct bot bots[MAX_BOTS];
     for (int i = 0; i < MAX_BOTS; i++)
     {
         bots[i].x = GetRandomValue(0, SCREEN_RANGE_MAP);
@@ -64,7 +64,6 @@ int main(void)
         }
 
         //----------------------------------------------------------------------------------
-
         // Draw
         //----------------------------------------------------------------------------------
         BeginDrawing();
